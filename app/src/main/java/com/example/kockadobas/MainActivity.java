@@ -1,13 +1,16 @@
 package com.example.kockadobas;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     Button generate;
     Button reset;
     TextView results;
+    AlertDialog.Builder alert;
 
     private int dices = 2;
     private int dice1Result;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         generate = (Button) findViewById(R.id.generate);
         reset = (Button) findViewById(R.id.reset);
         results = (TextView) findViewById(R.id.results);
+        alert = new AlertDialog.Builder(this);
 
         oneDice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,12 +65,35 @@ public class MainActivity extends AppCompatActivity {
                     generateOne();
                     result = dice1Result;
                     results.append(String.valueOf(result) + "\n");
+                    Toast.makeText(getApplicationContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                 } else {
                     generateOne();
                     generateTwo();
                     result = dice1Result + dice2Result;
                     results.append(String.valueOf(result) + " (" + String.valueOf(dice1Result) + "+" + String.valueOf(dice2Result) + ")\n");
+                    Toast.makeText(getApplicationContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alert.setTitle("Reset").
+                        setMessage("Biztos, hogy törölni szeretné az eddigi dobásokat?").
+                        setNegativeButton("Nem", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }).
+                        setPositiveButton("Igen", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                results.setText("");
+                            }
+                        });
+                alert.show();
             }
         });
     }
